@@ -48,14 +48,18 @@ varID=netcdf.inqVarID(mapNcids(itrk), 'DataMeanLongitude')  ;
 read=netcdf.getVar(mapNcids(itrk),varID)  ;
 DataMeanLongitude(1:a,itrk)=read ; 
 
-varID=netcdf.inqVarID(mapNcids(itrk), 'QualityFlag')  ;
+varID=netcdf.inqVarID(mapNcids(itrk), 'SSMQuality')  ;
 read=netcdf.getVar(mapNcids(itrk),varID)  ;
 QualityFlag(1:a,itrk)=read ; 
 
 varID=netcdf.inqVarID(mapNcids(itrk), 'MeanObservationUTCTime')  ;
 read=netcdf.getVar(mapNcids(itrk),varID)  ;
+%     for k=1:a 
+%     pippo=''; for i=1:30, pippo=[pippo, read(i,k)]; end  %%% !!!!!!!!To be fixed the L3 product
+if ischar(read)>0 , read=string(read') ; read=extractBefore(read, "   ") ; end 
 MeanObservationUTCTime(1:a,itrk)=read ; 
-
+%     MeanObservationUTCTime(k,itrk)=string(pippo) ; 
+%     end
 varID=netcdf.inqVarID(mapNcids(itrk), 'SoilMoistureMap')  ;
 read=netcdf.getVar(mapNcids(itrk),varID)  ;
 [a b]=size(read) ; 
