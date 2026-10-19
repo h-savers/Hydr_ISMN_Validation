@@ -1,4 +1,4 @@
-function structErrore=HydrSMAPval_main(init_SM_Day,final_SM_Day, configurationPath)
+function structErrore=HydrISMNval_main(init_SM_Day,final_SM_Day, configurationPath)
 
 close all
 clearvars -except init_SM_Day final_SM_Day configurationPath
