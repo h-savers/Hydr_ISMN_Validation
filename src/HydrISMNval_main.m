@@ -312,6 +312,59 @@ numdays=length(DateOK) ;
  SMAP = ReadSMOS(dayOKwithSMOS, SMOSfileOK_SD, SMOSfileOK_SA, SMOSfolderOK, pixelSMOS, lineSMOS); 
  dayOKwithSMAP=dayOKwithSMOS ; 
  dayOK=dayOKSMOS ; 
+ elseif RefSatellite=="CONUS"
+load('USCRN_CONUS_SM_20260601_to_now.mat') ; 
+dayOKwithCONUS=[] ; ii=0; 
+   for ki=1:numdays
+   CONUSdayData=find(dateshift(DateTime, 'start', 'day') == dateshift(timeproduct_sixtotOK(ki,1), 'start', 'day')) ; 
+   if isempty(CONUSdayData)==0 , 
+       dayOKwithCONUS=[dayOKwithCONUS, ki] ; 
+       ii=ii+1 ;
+       SMAP(ii,1).SoilMoisture_AM_REF= BaseSM(CONUSdayData) ; 
+       SMAP(ii,1).latitude_AM=Lat(CONUSdayData) ; 
+       SMAP(ii,1).longitude_AM=Lon(CONUSdayData) ; 
+       SMAP(ii,1).tb_time_AM_REF=DateTime(CONUSdayData) ; 
+       SMAP(ii,1).retrieval_qual_flag_AM_REF=ones(length(CONUSdayData),1) ; 
+
+       SMAP(ii,1).SoilMoisture_PM_REF= [] ; 
+       SMAP(ii,1).latitude_PM=[] ; 
+       SMAP(ii,1).longitude_PM=[]; 
+       SMAP(ii,1).tb_time_PM_REF=NaT(0,0) ; 
+       SMAP(ii,1).retrieval_qual_flag_PM_REF=[] ; 
+
+       SMAP(ii,2).SoilMoisture_AM_REF= [] ; 
+       SMAP(ii,2).latitude_AM=[] ; 
+       SMAP(ii,2).longitude_AM=[]; 
+       SMAP(ii,2).tb_time_AM_REF=NaT(0,0) ; 
+       SMAP(ii,2).retrieval_qual_flag_AM_REF=[] ; 
+
+       SMAP(ii,2).SoilMoisture_PM_REF= [] ; 
+       SMAP(ii,2).latitude_PM=[] ; 
+       SMAP(ii,2).longitude_PM=[]; 
+       SMAP(ii,2).tb_time_PM_REF=NaT(0,0) ; 
+       SMAP(ii,2).retrieval_qual_flag_PM_REF=[] ; 
+
+       SMAP(ii,3).SoilMoisture_AM_REF= [] ; 
+       SMAP(ii,3).latitude_AM=[] ; 
+       SMAP(ii,3).longitude_AM=[]; 
+       SMAP(ii,3).tb_time_AM_REF=NaT(0,0) ; 
+       SMAP(ii,3).retrieval_qual_flag_AM_REF=[] ; 
+
+       SMAP(ii,3).SoilMoisture_PM_REF= [] ; 
+       SMAP(ii,3).latitude_PM=[] ; 
+       SMAP(ii,3).longitude_PM=[]; 
+       SMAP(ii,3).tb_time_PM_REF=NaT(0,0) ; 
+       SMAP(ii,3).retrieval_qual_flag_PM_REF=[] ; 
+
+   end
+   end
+   dayOK=length(dayOKwithCONUS) ;
+   dayOKwithSMAP=dayOKwithCONUS ; 
+       % size(timeproduct_sixtotOK)
+% SMAP
+% leggere CONUS     
+% find(DateTime==timeproduct_sixtotOK(1,1))
+
  else
 disp([char(datetime('now','Format','yyyy-MM-dd HH:mm:ss')) ' ERROR: Wrong reference satellite name. Program stopping']) ; 
         fprintf(logfileID,[char(datetime('now','Format','yyyy-MM-dd HH:mm:ss')) ' ERROR: Wrong reference satellite name. Program stopping']) ; 
@@ -463,7 +516,8 @@ HydroTime=HydroTime(Hydrononan) ;
 HydroLat=HydroLat(Hydrononan) ;
 HydroLon=HydroLon(Hydrononan)  ; 
 
-SMAPTime(contains(SMAPTime, "N/A")==1)="NaT" ;  % needed as the first element of SMAP UTC time in SMAP 09 km is "N/A" 
+
+SMAPTime(contains(string(SMAPTime), "N/A")==1)="NaT" ;  % needed as the first element of SMAP UTC time in SMAP 09 km is "N/A" 
 % SMAPnonan=find(SMAPSoilMoisture ~= -9999 & isnan(SMAPSoilMoisture)==0) ;
 % SMAPnonan=find(SMAPSoilMoisture ~= -9999 & isnan(SMAPSoilMoisture)==0 & datetime(SMAPTime, 'InputFormat', 'yyyy-MM-dd''T''HH:mm:ss.SSS') > min(datetime(HydroTime))- ThresholdTimeDelay/24 ...
 %     & datetime(SMAPTime, 'InputFormat', 'yyyy-MM-dd''T''HH:mm:ss.SSS') < max(datetime(HydroTime))+ ThresholdTimeDelay/24) ;
@@ -519,7 +573,7 @@ colorbar ;
 % %     title(['Day ' char(extractBefore(string(SMAPTime(ii,1)),'T')) ])
 if RefSatellite=="SMAP" | RefSatellite=="SMAP09"
     pos=find(char(SMAPfileOK(ii,2))=='2') ; title(['Day ' char(insertAfter(insertAfter(extractBetween(char(SMAPfileOK(ii,2)), pos(1), pos(1)+7),4, '-'), 7, '-')) ]) ; 
-else
+elseif RefSatellite=="SMOS"
 pos=find(char(SMOSfileOK_SA(ii,2))=='2') ; title(['Day ' char(insertAfter(insertAfter(extractBetween(char(SMOSfileOK_SA(ii,2)), pos(1), pos(1)+7),4, '-'), 7, '-')) ]) ; 
 end
 
